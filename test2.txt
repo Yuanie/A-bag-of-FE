@@ -1,2 +1,3 @@
 git is the distribution control system...
 it's so nice~~~~~
+under GPL
