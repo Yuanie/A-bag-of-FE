@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+
+</head>
+	
+<body>
+
+<!-- class and style binding -->
+
+<!-- 对象语法 -->
+<div id="app" class="static"
+	:class="classObj">
+</div>
+
+<div id="app1" class="static"
+	:class="classObj">
+</div>
+
+<!-- 数组语法 -->
+<div id="app2" class="static"
+	:class="[{active: isActive}, errorClass]">
+</div>
+
+
+<!-- 用在组件上 -->
+<my-component id="app3" class="baz foo" :class="{active: isActive}"></my-component>
+
+<!-- 绑定内联样式 -->
+<div id="app4" v-bind:style="styleObject">hello world</div>
+
+<script>
+
+	Vue.component('my-component', {
+		template: '<p class="foo bar">Hi</p>'
+	})
+
+
+	var vm = new Vue ({
+		el: '#app',
+		data: {
+			classObj: {
+				active: true,
+				'text-danger': true		
+			}
+			
+		},
+	})
+
+	var vm1 = new Vue ({
+		el: '#app1',
+		data: {
+			isActive: true,
+			error: null		
+		},
+		computed: {
+			classObj: function() {
+				return {
+					active: this.isActive && !this.error,
+					'text-danger': this.error && this.error.type === 'fatal'
+				}
+			}
+
+		}
+	})
+
+	var vm2 = new Vue ({
+		el: '#app2',
+		data: {
+			isActive: true,
+			errorClass: 'text-danger'			
+		},
+	})
+
+	var vm3 = new Vue ({
+		el: '#app3',
+		data: {
+			isActive: true
+		}
+	})
+
+	var vm4 = new Vue ({
+		el: '#app4',
+		data: {
+		  styleObject: {
+		    color: 'red',
+		    fontSize: '13px'
+		 }
+}
+	})
+
+
+</script>
+
+</body>
+</html>
+

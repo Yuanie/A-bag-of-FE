@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+
+</head>
+	
+<body>
+
+<!-- 计算属性 方法-->
+
+<!-- 计算属性是基于它们的响应式依赖进行缓存的。只在相关响应式依赖发生改变时它们才会重新求值。这就意味着只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数 -->
+<div id="example">
+	<p>Original Message: "{{ message }}"</p>
+	<p>Reverse Message: "{{ reverseMsg }}"</p>
+	<p>gender: {{ getSex }}</p>
+	<p>age: {{ getAge }}</p>
+</div>
+
+<hr>
+
+<div id="example1">
+	<p>Original Message: "{{ message }}"</p>
+	<p>Reverse Message: "{{ reverseMsg() }}"</p>
+	<p>gender: {{ getSex() }}</p>
+	<p>age: {{ getAge() }}</p>
+</div>
+
+<hr>
+
+<script>
+	var vm = new Vue ({
+		el: '#example',
+		data: {
+			message: 'Hello!',
+			gender: 'male',
+			age: 25
+		},
+		computed: {
+			reverseMsg: function() {
+				return this.message.split('').reverse().join('')
+			},
+			getAge: function() {
+				console.log(this.age + '...')
+				return this.age
+			},
+			getSex: function() {
+				console.log(this.gender + '...')
+				return this.gender
+			}
+		}
+	})
+
+	var vm1 = new Vue ({
+		el: '#example1',
+		data: {
+			message: 'Hi!',
+			gender: 'male',
+			age: 25
+		},
+		methods: {
+			reverseMsg: function() {
+				return this.message.split('').reverse().join('')	
+			},
+			getAge: function() {
+				console.log(this.age + '...')
+				return this.age
+			},
+			getSex: function() {
+				console.log(this.gender + '...')
+				return this.gender
+			}
+		},
+	})
+
+
+</script>
+
+</body>
+</html>
+

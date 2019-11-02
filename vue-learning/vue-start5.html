@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+
+</head>
+	
+<body>
+
+<!-- v-if v-else 并用key提供了一种方式表示两个元素相互独立，不可复用 -->
+
+
+<!-- 下例中没有使用唯一值的key，因此文本框上的内容会被共用，即切换不会清除用户已经输入的内容 -->
+<div id="app">
+	<template v-if="loginType === 'username'">
+		<label>Username</label>
+		<input type="text" placeholder="Enter your name">
+	</template>
+	<template v-else>
+		<label>Email</label>
+		<input type="text" placeholder="Enter your email address" >
+	</template>
+	<button @click="Toggle" type="">Toggle login type</button>
+</div>
+
+<hr>
+
+<div id="app1">
+	<template v-if="loginType === 'username'">
+		<label>Username</label>
+		<input type="text" placeholder="Enter your name"  key='username-input'>
+	</template>
+	<template v-else>
+		<label>Email</label>
+		<input type="text" placeholder="Enter your email address" key='email-input'>
+	</template>
+	<button @click="Toggle" type="">Toggle login type</button>
+	<p v-show="ok">Hello, Ojbk...
+		<button @click="changeShow" type="">let Ojbk and me disappear...</button>
+	</p>
+	
+</div>
+
+
+<!-- v-show和v-if用法大致相同 只是v-show 元素会始终被渲染并保留在DOM中 类似于CSS中的display -->
+<!-- v-show不支持 <template> and v-else -->
+
+	<!-- 一般来说 v-if有更高的切换开销 v-show有更高的初始渲染开销 -->
+	<!-- 如果需要频繁的切换，使用v-show会更好 反之 如果运行时很少改变 使用v-if -->
+
+<script>
+
+	var vm = new Vue ({
+		el: '#app',
+		data: {
+			loginType: 'username',
+		},
+		methods: {
+			Toggle: function() {
+				return this.loginType = this.loginType === 'username' ? 'email' : 'username'
+			}
+		},
+		components: {
+		}
+	})
+
+	var vm1 = new Vue ({
+		el: '#app1',
+		data: {
+			loginType: 'username',
+			ok: true
+		},
+		methods: {
+			Toggle: function() {
+				return this.loginType = this.loginType === 'username' ? 'email' : 'username'
+			},
+			changeShow: function() {
+				this.ok = !this.ok
+			}
+		},
+		components: {
+		}
+	})
+	
+
+</script>
+
+</body>
+</html>
+
