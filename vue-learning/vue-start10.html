@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+
+</head>
+	
+<body>
+<!-- 在自定义组件上使用 v-model -->
+<!-- v-model实际上是语法糖 其真正的实现是
+	<input type="text"
+　　　　　:value="price"
+　　　　　@input="price=$event.target.value"> -->
+<div id="app">
+	<my-component  v-model="msg"></my-component>
+		message: {{ msg }}
+	<my-counter v-model="num"></my-counter>
+</div>
+
+<hr>
+
+<!-- 动态组件 有的时候，在不同组件之间进行动态切换是非常有用的，比如在一个多标签的界面里 -->
+<!-- 通过 Vue 的 <component> 元素加一个特殊的 is 特性来实现 -->
+<div id="dynamic-component-demo" class="demo">
+  <button
+    v-for="tab in tabs"
+    v-bind:key="tab"
+    v-bind:class="['tab-button', { active: currentTab === tab }]"
+    v-on:click="currentTab = tab"
+  >{{ tab }}</button>
+
+  <component
+    v-bind:is="currentTabComponent"
+    class="tab"
+  ></component>
+</div>
+
+
+<script>
+
+	Vue.component('my-component', {
+		template: `<div>
+  					<input type="text" :value="currentValue" @input="handleInput"/>
+  				   </div>`,
+  	    props: ['value'],
+  	    computed: {
+  	    	currentValue: function() {
+  	    		return this.value
+  	    	}
+  	    },
+  	    methods: {
+  	    	handleInput(event) {
+  	    		var value = event.target.value
+  	    		this.$emit('input', value)
+  	    	}
+  	    }
+	});
+
+	Vue.component("my-counter", {
+		template: `<div>
+					<h3> {{ value }} </h3>
+  					<button @click="plus">+</button>
+  					<button @click="minus">-</button>
+  					<button @click="warn">Warning</button>
+  				   </div>`,
+  	    props: ['value'],
+  	    data: function() {
+  	    	return {
+  	    		val: this.value
+  	    	}
+  	    },
+  	    methods: {  	    	
+  	    	plus() {
+  	    		if (this.val < 10) {
+  	    			this.val += 1
+  	    		} else {
+  	    			this.val = 0
+  	    			this.warn()
+  	    		}
+  	    		
+  	    		this.$emit('input', this.val)
+  	    	},
+  	    	minus() {
+		    	if (this.val>0) {
+			        this.val = this.val-1
+			        this.$emit('input', this.val) //触发 input 事件，并传入新值
+	      		}
+    		},
+    		warn() {
+    				alert("Do not exceeds over 10...")
+    			}
+    		}
+  	});
+
+	Vue.component('tab-home', { 
+		template: '<div>Home component</div>' 
+	})
+	Vue.component('tab-posts', { 
+		template: '<div>Posts component</div>' 
+	})
+	Vue.component('tab-archive', { 
+		template: '<div>Archive component</div>' 
+	})
+
+	new Vue ({
+		el: '#app',
+		data: {
+			msg: 'hello, world!',
+			num: 0
+		}
+	});
+
+	new Vue({
+	  el: '#dynamic-component-demo',
+	  data: {
+	    currentTab: 'Home',
+	    tabs: ['Home', 'Posts', 'Archive']
+	  },
+	  computed: {
+	    currentTabComponent: function () {
+	      return 'tab-' + this.currentTab.toLowerCase()
+	    }
+	  }
+	});
+
+
+</script>
+
+</body>
+</html>
+

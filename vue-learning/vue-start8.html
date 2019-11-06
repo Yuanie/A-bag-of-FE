@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+
+</head>
+	
+<body>
+
+<!-- v-model 与表单输入 -->
+<!-- 多行文本 -->
+<div id="example1">
+	<span>Multiline message is:</span>
+	<p style="white-space: pre-line;">{{ message }}</p>
+	<br>
+	<textarea v-model="message" name="" placeholder="edit here"></textarea>
+</div>
+
+<hr>
+
+<!-- 单个复选框，绑定到布尔值 多个复选框 绑定到同一个数组 -->
+<div id='example2'>
+  <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+  <label for="jack">Jack</label>
+  <input type="checkbox" id="john" value="John" v-model="checkedNames">
+  <label for="john">John</label>
+  <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+  <label for="mike">Mike</label>
+  <br>
+  <span>Checked names: {{ checkedNames }}</span>
+</div>
+
+<hr>
+
+<!-- 单选框 多选时 (绑定到一个数组)-->
+<div id="example3">
+  <input type="radio" id="one" value="One" v-model="picked">
+  <label for="one">One</label>
+  <br>
+  <input type="radio" id="two" value="Two" v-model="picked">
+  <label for="two">Two</label>
+  <br>
+  <span>Picked: {{ picked }}</span>
+</div>
+
+<hr>
+
+<!-- 选择框 -->
+<div id="example4">
+  <select v-model="selected">
+    <option disabled value="">请选择</option>
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+  </select>
+  <span>Selected: {{ selected }}</span>
+</div>
+
+
+<script>
+	var vm1 = new Vue ({
+		el: '#example1',
+		data: {
+			message: ''
+		},
+		methods: {
+		}
+	});
+
+	var vm2 = new Vue ({
+		el: '#example2',
+		data: {
+			checkedNames: []
+		},
+		methods: {
+		}
+	});
+
+	var vm3 = new Vue ({
+		el: '#example3',
+		data: {
+			picked: ''
+		},
+		methods: {
+		}
+	});
+
+	var vm4 = new Vue ({
+		el: '#example4',
+		data: {
+			selected: ''
+		},
+		methods: {
+		}
+	});
+
+
+</script>
+
+</body>
+</html>
+

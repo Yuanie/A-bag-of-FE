@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+</head>
+	
+<body>
+
+
+<!-- 具名和不具名插槽 v-slot -->
+<!-- 一个不带 name 的 <slot> 出口会带有隐含的名字“default” -->
+<!-- 在向具名插槽提供内容的时候，我们可以在一个 <template> 元素上使用 v-slot 指令，
+	并以 v-slot 的参数的形式提供其名称 -->
+
+<div class="container" id="app">
+	<!-- 不具名插槽 -->
+	<children>
+	    <template v-slot> <!--此处的v-slot等同于 v-slot:default-->
+	        <div>
+	            <p>你能看到我吗?</p>
+	        </div>
+	    </template>
+	</children>
+
+	<hr>
+	
+	<!-- 具名插槽 -->
+	<!-- 具名插槽的缩写 v-slot: ==> # -->
+	<p>以下为子组件的内容:</p>
+	<base-layout>
+		<template v-slot:footer>
+	    	<h3>I'm a footer</h3>
+		</template>
+		<template #default>
+			<p>I'm a default page.</p>
+		</template>
+		<template v-slot:header>
+			<p>I'm a header</p>
+		</template>
+	</base-layout>
+
+	<hr>
+
+	<!-- 作用域插槽 -->
+	<current-user>
+		<!-- 绑定在<slot>元素上的特性被称为插槽prop，现在在父级作用域中，我们可以给 v-slot 带一个值来定义我们提供的插槽 prop 的名字 -->
+		<template v-slot="slotProps">
+			{{ slotProps.user.firstName }}
+		</template>
+		<template v-slot:test>
+			<h3>just for a test</h3>
+		</template>	
+	</current-user>
+
+	<!-- 只要出现多个插槽，请始终为所有的插槽使用完整的基于 <template> 的语法 
+	<current-user>
+	  <template v-slot:default="slotProps">
+	    {{ slotProps.user.firstName }}
+	  </template>
+
+	  <template v-slot:other="otherSlotProps">
+	    ...
+	  </template>
+	</current-user>-->
+	<hr>
+
+	<!-- 解构插槽prop -->
+	<!-- 作用域插槽的内部工作原理是将你的插槽内容包括在一个传入单个参数的函数里 -->
+	<!-- 也可以将 user 重命名为 person -->
+	<!-- 也可以自定义后备内容,用于插槽 prop 是 undefined 的情形 -->
+	<current-user1>
+		<!-- <template v-slot="{ user }">
+			{{ user.lastName }}
+		</template> -->
+		<template v-slot="{ user: person }">
+			{{ person.lastName }}
+		</template>
+	</current-user1>
+	<hr>
+
+
+	<!-- 一个示例 -->
+	<p>Todo-list:</p>
+	<todo-list>
+		<!-- 解构插槽 父级组件获得todo的内容 -->
+		<template v-slot="{ todo }">		    
+		    {{ todo.text }}
+		    <span v-if="todo.isComplete">✓</span>
+		    <span v-else>×</span>
+ 		</template>
+	</todo-list>
+</div>
+
+
+	
+
+<template id="org">
+	<div>
+		<slot></slot>
+		<slot name="header"></slot>	
+		<slot name="footer"></slot>
+	</div>
+</template>
+
+<template id="waitting">
+	<div>
+		<ul>
+		  <li
+		    v-for="todo in todos"
+		    v-bind:key="todo.id"
+		  >
+		    <!--
+		    我们为每个 todo 准备了一个插槽，
+		    将 `todo` 对象作为一个插槽的 prop 传入。
+		    -->
+		    <slot v-bind:todo="todo">
+		      <!-- 后备内容 -->
+		      <!-- 当在一个父级组件中不提供任何插槽内容时 显示此后备内容 -->
+		      {{ todo.text }}
+		    </slot>
+		  </li>
+		</ul>
+	</div>
+</template>
+	
+
+
+
+	
+<script>
+
+	Vue.component('children', {
+		template: `
+			<div>
+				<slot></slot>
+			</div>
+		`
+	});
+
+	Vue.component('base-layout', {
+		template: '#org',
+	});
+
+
+	// 为了能让user在父级插槽可用，将user作为<slot>元素的一个特性绑定上去
+	Vue.component('current-user', {
+		template: `
+			<span>
+				<slot name="test"></slot>
+				<slot v-bind:user="user"></slot>
+			</span>
+		`,
+		data: 
+			function() {
+				return {
+					user: {
+						firstName: 'Neo',
+						lastName: 'Nordo'
+					}
+				}
+			}
+	});
+
+	Vue.component('current-user1', {
+		template: `
+			<span>
+				<slot v-bind:user="user"></slot>
+			</span>
+		`,
+		data: 
+			function() {
+				return {
+					user: {
+						firstName: 'Neo',
+						lastName: 'Nordo'
+					}
+				}
+			}
+	});
+
+	Vue.component('todo-list', {
+		template: '#waitting',
+		data: 
+			function() {
+				return {
+					todos: [
+						{'id':1, 'text': 'Washing', 'isComplete': false},
+						{'id':2, 'text': 'Walk the dog', 'isComplete': true},
+						{'id':3, 'text': 'Running', 'isComplete': false},
+						{'id':4, 'text': 'Do the homework', 'isComplete': true}
+					]
+				}	
+			}
+	});
+
+	new Vue ({
+		el: '#app',
+
+		data: {
+		}
+	});
+
+
+</script>
+
+</body>
+</html>
+

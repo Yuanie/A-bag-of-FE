@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello,VUE</title>
+  <script src="./vue.js"></script>
+</head>
+  
+<body>
+<div id="app">
+    <blog-post
+      v-for="post in posts"
+      v-bind:title="post.title"
+      v-bind:name="post.author.name"
+      v-bind:gender="post.author.gender"
+      v-bind:age="post.author.age"
+      v-bind:key="post.id"
+    ></blog-post>
+</div>
+
+<script>
+    Vue.component('blog-post', {
+        props: {
+            title: String,
+            name: String,
+            age: Number,
+            gender: String
+        },
+        template: `
+        <div>
+            <h3>{{ title }} by {{ name }}</h3>
+            <button @click="boardcast">查看ta的信息</button>        
+        </div>
+        `,
+        data: 
+            function() {
+                return {
+                    val: this.gender
+                }     
+        },
+        methods: {
+            boardcast() {
+                if (this.val === 'male') {
+                    alert("这是一个年纪为" + this.age + "的有为青年!")
+                } else {
+                    alert("这是一个芳龄为" + this.age + "的阳光少女!")
+                }
+            }
+        }
+    })
+
+    new Vue ({
+        el: "#app",
+        data: {
+            posts: [
+            {
+                title: 'hello, world',
+                author: {
+                    id: 1,
+                    name: 'Nieyuan',
+                    gender: 'male',
+                    age: 25
+                }
+            },
+            {
+                title: 'hello, vue',
+                author: {
+                    id: 2,
+                    name: 'Pengting',
+                    gender: 'female',
+                    age: 23
+                }
+            },
+        ]}
+    })
+ 
+
+</script>
+
+</body>
+</html>
+

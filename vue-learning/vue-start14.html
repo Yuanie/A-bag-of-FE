@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello,VUE</title>
+	<script src="./vue.js"></script>
+
+</head>
+	
+<body>
+
+<!-- sync修饰符 -->
+<!-- <comp :foo.sync="bar"></comp> <==> <comp :foo="bar" @update:foo="val => bar = val"></comp> -->
+<!-- prop 双向数据绑定 通过sync的语法糖 较为优雅的实现父子组件的数据传递 -->
+<!-- 下例使用 sync修饰符 和 未使用 sync 修饰符 实现父子通信 方法是等效的 -->
+
+<div id="app1">
+	<input type="button" 
+		   value="我是父组件的值"
+		   @click="changeValue"
+	>
+	<child-comp1 :show.sync="valueChild"></child-comp1>
+</div>
+
+<hr>
+<div id="app2">
+	<input type="button" 
+		   value="我是父组件的值"
+		   @click="changeValue"
+	>
+	<child-comp2 :show="valueChild" @update:show="notShow"></child-comp2>
+</div>
+
+<script>
+
+	Vue.component('child-comp1', {
+		props: ['show'],
+		template: `
+			<div v-if="show">
+				我是一个子组件
+				<button @click="notShow">点我消失</button>
+			</div>		
+		`,
+		methods: {
+			notShow() {
+				this.$emit("update:show", false)
+			}
+		}
+	})
+
+
+	Vue.component('child-comp2', {
+		props: ['show'],
+		template: `
+			<div v-if="show">
+				我是一个子组件
+				<button @click="disappear">点我消失</button>
+			</div>		
+		`,
+		methods: {
+			disappear() {
+				this.$emit("update:show", false)
+			}
+		}
+	})
+
+
+	var vm1 = new Vue ({
+		el: '#app1',
+		data: {
+			valueChild: false
+		},
+		methods: {
+			changeValue() {
+				this.valueChild = !this.valueChild
+			}
+		}
+	});
+
+	var vm2 = new Vue ({
+		el: '#app2',
+		data: {
+			valueChild: false
+		},
+		methods: {
+			changeValue() {
+				this.valueChild = !this.valueChild
+			},
+
+			notShow() {
+				this.valueChild = false
+			}
+		}
+	});
+
+	
+
+
+</script>
+
+</body>
+</html>
+
