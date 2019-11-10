@@ -1,236 +1,219 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Test</title>
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
   <script src="./vue.js"></script>
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
-<body>
-<template>
-  <div class="list">
-    <ul>
-      <el-input
-        class="inline-input2"
-        placeholder="请输入要新增的标签"
-        v-model="newTag"
-        size="mini"
-      ></el-input>
-      <button @click="add()">确定</button>
-      <el-input
-        class="inline-input"
-        placeholder="请输入要查找的标签"
-        suffix-icon="el-icon-search"
-        v-model="tag"
-        size="mini"
-      ></el-input>
-      <li v-for="(item, index) in filterData" :key="index" class="tag-list">
-        <el-row>
-          <el-col :span="12">
-            <span
-              class="tag-item"
-              :class="{ active_tag: active === index }"
-              :title="item.label"
-              v-show="flag !== index"
-              @click="changeColor(index)"
-              >{{ item.label }}</span
-            >
-            <input
-              ref="input"
-              v-model="editName"
-              @blur="updateName(item, index)"
-              v-show="flag === index"
-              class="tag-item"
-            />
-          </el-col>
-          <el-col :span="12" class="tag-edit">
-            <a href="#" @click="editor(item, index)">修改</a>
-            <a href="#" @click="del(index)">删除</a>
-            <a href="#" @click="moveUp(index)">上移</a>
-            <a href="#" @click="moveDown(index)">下移</a>
-            <a href="#" @click="collection(item, index)" v-if="!item.active"
-              >收藏</a
-            >
-            <a
-              href="#"
-              @click="Cancelcollection(item, index)"
-              v-if="item.active"
-              >取消收藏</a
-            >
-          </el-col>
-        </el-row>
-      </li>
-    </ul>
-  </div>
-</template>
 
-<script>
-export default {
-  name: "three",
-  components: {},
-  data() {
-    return {
-      tagList: [
-        { label: "标签一" },
-        { label: "标签二" },
-        { label: "标签三" },
-        { label: "标签四" }
-      ],
-      flag: -1,
-      active: -1,
-      editName: "",
-      tag: "",
-      newTag: "",
-      successCollect: -1
-    };
-  },
-  computed: {
-    /* 模糊搜索 */
-    filterData() {
-      const tag = this.tag;
-      if (tag) {
-        return this.tagList.filter(data => {
-          return Object.keys(data).some(key => {
-            return (
-              String(data[key])
-                .toLowerCase()
-                .indexOf(tag) > -1
-            );
+<body>
+  <template>
+    <div class="list">
+      <ul>
+        <el-input class="inline-input2" placeholder="请输入要新增的标签" v-model="newTag" size="mini"></el-input>
+        <button @click="add()">确定</button>
+        <el-input class="inline-input" placeholder="请输入要查找的标签" suffix-icon="el-icon-search" v-model="tag" size="mini">
+        </el-input>
+        <li v-for="(item, index) in filterData" :key="index" class="tag-list">
+          <el-row>
+            <el-col :span="12">
+              <span class="tag-item" :class="{ active_tag: active === index }" :title="item.label"
+                v-show="flag !== index" @click="changeColor(index)">{{ item.label }}</span>
+              <input ref="input" v-model="editName" @blur="updateName(item, index)" v-show="flag === index"
+                class="tag-item" />
+            </el-col>
+            <el-col :span="12" class="tag-edit">
+              <a href="#" @click="editor(item, index)">修改</a>
+              <a href="#" @click="del(index)">删除</a>
+              <a href="#" @click="moveUp(index)">上移</a>
+              <a href="#" @click="moveDown(index)">下移</a>
+              <a href="#" @click="collection(item, index)" v-if="!item.active">收藏</a>
+              <a href="#" @click="Cancelcollection(item, index)" v-if="item.active">取消收藏</a>
+            </el-col>
+          </el-row>
+        </li>
+      </ul>
+    </div>
+  </template>
+
+  <script>
+    export default {
+      name: "three",
+      components: {},
+      data() {
+        return {
+          tagList: [{
+              label: "标签一"
+            },
+            {
+              label: "标签二"
+            },
+            {
+              label: "标签三"
+            },
+            {
+              label: "标签四"
+            }
+          ],
+          flag: -1,
+          active: -1,
+          editName: "",
+          tag: "",
+          newTag: "",
+          successCollect: -1
+        };
+      },
+      computed: {
+        /* 模糊搜索 */
+        filterData() {
+          const tag = this.tag;
+          if (tag) {
+            return this.tagList.filter(data => {
+              return Object.keys(data).some(key => {
+                return (
+                  String(data[key])
+                  .toLowerCase()
+                  .indexOf(tag) > -1
+                );
+              });
+            });
+          }
+          return this.tagList;
+        }
+      },
+      mounted() {
+        this.addActive();
+      },
+      methods: {
+        editor(item, index) {
+          /* 给input框赋值 */
+          this.editName = item.label;
+          this.flag = index;
+          /* this.$refs使其进入focus状态 */
+          this.$nextTick(() => {
+            this.$refs.input[index].focus();
           });
-        });
-      }
-      return this.tagList;
-    }
-  },
-  mounted() {
-    this.addActive();
-  },
-  methods: {
-    editor(item, index) {
-      /* 给input框赋值 */
-      this.editName = item.label;
-      this.flag = index;
-      /* this.$refs使其进入focus状态 */
-      this.$nextTick(() => {
-        this.$refs.input[index].focus();
-      });
-    },
-    updateName(item, index) {
-      /*  如果输入的标签名称为空 */
-      if (!this.editName) {
-        this.editName = item.label;
-        this.flag = -1;
-        return this.$message.warning("修改的标签名称不能为空");
-      }
-      /*  如果输入的标签名称已存在 */
-      for (let i = 0; i < this.tagList.length; i++) {
-        if (this.tagList[i].label === this.editName) {
-          /* 判断修改的名字是否是它本身 */
-          if (this.editName !== item.label) {
-            this.$message.warning("修改的标签名称已存在");
+        },
+        updateName(item, index) {
+          /*  如果输入的标签名称为空 */
+          if (!this.editName) {
+            this.editName = item.label;
             this.flag = -1;
+            return this.$message.warning("修改的标签名称不能为空");
+          }
+          /*  如果输入的标签名称已存在 */
+          for (let i = 0; i < this.tagList.length; i++) {
+            if (this.tagList[i].label === this.editName) {
+              /* 判断修改的名字是否是它本身 */
+              if (this.editName !== item.label) {
+                this.$message.warning("修改的标签名称已存在");
+                this.flag = -1;
+                return;
+              }
+            }
+          }
+          /* 如果修改的标签名称正确 */
+          this.$set(this.tagList[index], "label", this.editName);
+          this.flag = -1;
+        },
+        /* 增加新标签 */
+        add() {
+          if (!this.newTag) {
+            return this.$message.warning("请输入要新增的标签！");
+          }
+          for (let i = 0; i < this.tagList.length; i++) {
+            if (this.tagList[i].label === this.newTag) {
+              this.$message.warning("标签名称已存在");
+              return;
+            }
+          }
+          this.tagList.push({
+            label: this.newTag
+          });
+        },
+        /* 删除标签 */
+        del(index) {
+          this.tagList.splice(index, 1);
+        },
+        /* 上移标签 */
+        moveUp(index) {
+          if (index === 0) {
             return;
           }
+          /* 上移 */
+          this.tagList.splice(index - 1, 0, this.tagList[index]);
+          /* 把残留的那一项删除 */
+          this.tagList.splice(index + 1, 1);
+        },
+        /* 下移标签 */
+        moveDown(index) {
+          if (index === this.tagList.length - 1) {
+            return;
+          }
+          /* 在下一项插入该项 */
+          this.tagList.splice(index + 2, 0, this.tagList[index]);
+          /* 把残留的那一项删除 */
+          this.tagList.splice(index, 1);
+        },
+        /* 点击改变颜色 */
+        changeColor(index) {
+          this.active = index;
+        },
+        /* 给tagList添加一个属性,用于判断是否收藏了某个标签 */
+        addActive() {
+          this.tagList.forEach(item => {
+            this.$set(item, "active", false);
+          });
+        },
+        /* 收藏 */
+        collection(item) {
+          this.$confirm("是否确定收藏此标签", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "info"
+            })
+            .then(() => {
+              item.active = !item.active;
+              this.$message({
+                type: "success",
+                message: "收藏成功!"
+              });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消收藏"
+              });
+            });
+        },
+        /* 取消收藏 */
+        Cancelcollection(item) {
+          this.$confirm("是否确定取消收藏此标签", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "info"
+            })
+            .then(() => {
+              item.active = !item.active;
+              this.$message({
+                type: "success",
+                message: "取消收藏成功!"
+              });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消操作"
+              });
+            });
         }
       }
-      /* 如果修改的标签名称正确 */
-      this.$set(this.tagList[index], "label", this.editName);
-      this.flag = -1;
-    },
-    /* 增加新标签 */
-    add() {
-      if (!this.newTag) {
-        return this.$message.warning("请输入要新增的标签！");
-      }
-      for (let i = 0; i < this.tagList.length; i++) {
-        if (this.tagList[i].label === this.newTag) {
-          this.$message.warning("标签名称已存在");
-          return;
-        }
-      }
-      this.tagList.push({ label: this.newTag });
-    },
-    /* 删除标签 */
-    del(index) {
-      this.tagList.splice(index, 1);
-    },
-    /* 上移标签 */
-    moveUp(index) {
-      if (index === 0) {
-        return;
-      }
-      /* 上移 */
-      this.tagList.splice(index - 1, 0, this.tagList[index]);
-      /* 把残留的那一项删除 */
-      this.tagList.splice(index + 1, 1);
-    },
-    /* 下移标签 */
-    moveDown(index) {
-      if (index === this.tagList.length - 1) {
-        return;
-      }
-      /* 在下一项插入该项 */
-      this.tagList.splice(index + 2, 0, this.tagList[index]);
-      /* 把残留的那一项删除 */
-      this.tagList.splice(index, 1);
-    },
-    /* 点击改变颜色 */
-    changeColor(index) {
-      this.active = index;
-    },
-    /* 给tagList添加一个属性,用于判断是否收藏了某个标签 */
-    addActive() {
-      this.tagList.forEach(item => {
-        this.$set(item, "active", false);
-      });
-    },
-    /* 收藏 */
-    collection(item) {
-      this.$confirm("是否确定收藏此标签", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "info"
-      })
-        .then(() => {
-          item.active = !item.active;
-          this.$message({
-            type: "success",
-            message: "收藏成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消收藏"
-          });
-        });
-    },
-    /* 取消收藏 */
-    Cancelcollection(item) {
-      this.$confirm("是否确定取消收藏此标签", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "info"
-      })
-        .then(() => {
-          item.active = !item.active;
-          this.$message({
-            type: "success",
-            message: "取消收藏成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消操作"
-          });
-        });
-    }
-  }
-};
-</script>
+    };
+  </script>
 
 
 </body>
-</html>
 
+</html>

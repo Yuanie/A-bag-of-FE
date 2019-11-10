@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hello,VUE</title>
+  <script src="./vue.js"></script>
+</head>
+
+<!-- 自定义组件基础 -->
+
+<!-- 使用了自定义属性的钩子函数 -->
+<!-- 
+  el：指令所绑定的元素，可以用来直接操作 DOM 
+  binding：一个对象，包含以下属性
+    name：指令名，不包括 v- 前缀
+    value：指令的绑定值，例如：v-my-directive="1 + 1" 中，绑定值为 2
+    oldValue：指令绑定的前一个值，仅在 update 和 componentUpdated 钩子中可用。无论值是否改变都可用
+    expression：字符串形式的指令表达式。例如 v-my-directive="1 + 1" 中，表达式为 "1 + 1"
+    arg：传给指令的参数，可选。例如 v-my-directive:foo 中，参数为 "foo"
+    modifiers：一个包含修饰符的对象。例如：v-my-directive.foo.bar 中，修饰符对象为 { foo: true, bar: true }
+  vnode：Vue 编译生成的虚拟节点
+  oldVnode：上一个虚拟节点，仅在 update 和 componentUpdated 钩子中可用 -->
+
+<body>
+  <div id="hook-arguments-example" v-demo:foo.a.b="message">
+  </div>
+  <hr>
+  <!-- 使用动态参数就可以非常方便地根据每个组件实例来进行更新 不仅是顶部 也可以是左边 -->
+  <div id="base-example" v-pin:[direction]="200">我被钉在距离div左边200px的地方！</div>
+
+  <script>
+    Vue.directive('demo', {
+      bind: function (el, binding, vnode) {
+        var s = JSON.stringify
+        // console.log(el === document.getElementById('hook-arguments-example'))
+        el.innerHTML =
+          'name: ' + s(binding.name) + '<br>' +
+          'value: ' + s(binding.value) + '<br>' +
+          'expression: ' + s(binding.expression) + '<br>' +
+          'argument: ' + s(binding.arg) + '<br>' +
+          'modifiers: ' + s(binding.modifiers) + '<br>' +
+          'vnode keys: ' + Object.keys(vnode).join(', ')
+      }
+    })
+
+    Vue.directive('pin', {
+      bind: function (el, binding, vnode) {
+        el.style.position = 'fixed'
+        var direction = (binding.arg == 'left' ? 'left' : 'top')
+        el.style[direction] = binding.value + 'px'
+      }
+    })
+
+    new Vue({
+      el: '#hook-arguments-example',
+      data: {
+        message: 'hello!'
+      }
+    })
+
+    new Vue({
+      el: '#base-example',
+      data: function () {
+        return {
+          direction: 'left'
+        }
+      }
+    })
+  </script>
+
+</body>
+
+</html>

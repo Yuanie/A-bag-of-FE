@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hello,VUE</title>
+  <script src="./vue.js"></script>
+</head>
+
+<!-- 
+      函数式组件 
+      组件是比较简单，没有管理任何状态，也没有监听任何传递给它的状态，也没有生命周期方法
+      它无状态 (没有响应式数据)，也没有实例 (没有 this 上下文)
+      因为函数式组件只是函数，所以渲染开销也低很多-->
+<!-- 组件需要的一切都是通过 context 参数传递 -->
+<div id="app1">
+  {{date}}
+  <smart-list :items="items" :isordered="isOrdered" :date="date"></smart-list>
+</div>
+<hr>
+<!-- 异步更新队列 -->
+<!-- 可能你还没有注意到，Vue 在更新 DOM 时是异步执行的
+  只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更
+  如果同一个 watcher 被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作是非常重要的
+  然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作
+  Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替
+-->
+<div id="app2">
+  <example></example>
+</div>
+
+<body>
+
+  <script>
+    var EmptyList = {
+      template: "<div>Empty list</div>"
+    }
+
+    Vue.component('smart-list', {
+        functional: true,
+        props: ['items', 'isordered', 'date'],
+        render: function (createElement, context) {
+          // 在添加 functional: true 之后，需要更新我们的锚点标题组件的渲染函数，为其增加 context 参数
+          // this.$slots.default 更新为 context.children，this.level 更新为 context.props.level
+
+          function appropriateListComponent() {
+            // console.log(context.props.isOrdered)
+            var items = context.props.items
+            if (items.length === 0) return EmptyList
+            // if (context.props.isOrdered) return OrderedList
+            // return UnorderedList
+            return 'ul'
+          }
+
+          return createElement(
+            appropriateListComponent(),
+            Array.apply(null, {
+              length: context.props.items.length
+            }).map(function (val, index) {
+              return createElement('li', context.props.items[index].name)
+            })
+            // context.data,
+            // context.children
+          )
+        }
+      }),
+
+
+      Vue.component('example', {
+        template: `
+        <div>
+          <span>{{ message }}</span>
+          <button  @click='updateMessage'>click</button>
+        </div>
+        `,
+        data: function () {
+          return {
+            message: '未更新'
+          }
+        },
+        methods: {
+          updateMessage: function () {
+            var tagName = this.$el.children[0]
+            this.message = this.message == '未更新' ? '已更新' : '未更新'
+            console.log(tagName.textContent) // => '未更新'
+            this.$nextTick(function () {
+              console.log(tagName.textContent) // => '已更新'
+            })
+          }
+        }
+      })
+
+
+    var vm = new Vue({
+      el: '#app1',
+      data: {
+        items: [{
+          id: 1,
+          name: 'cool'
+        }, {
+          id: 2,
+          name: 'awesome'
+        }, {
+          id: 3,
+          name: 'fantastic'
+        }],
+        isOrdered: false,
+        date: new Date().toTimeString()
+      }
+    })
+
+    var vm1 = new Vue({
+      el: '#app2',
+      data: {}
+    })
+  </script>
+
+</body>
+
+</html>
