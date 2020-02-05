@@ -1,7 +1,9 @@
-使用方式:
+有 js/ts的版本  切换不同分支即可
+
+js使用方式:
+
 安装yarn&&gulp
 npm install -g yarn
-
 
 使用yarn安装本地依赖 
 
@@ -25,5 +27,10 @@ npm install -g yarn
 
 命令行输入：
 `gulp` 即可完成打包
+
+ts使用方式类似
+
+需要编译 tsc
+
 
 打开`index.html`即可运行
