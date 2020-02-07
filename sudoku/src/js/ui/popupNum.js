@@ -4,18 +4,6 @@
 // popup --> (click) --> n --> (fill) --> cell
 const Grid = require("./grid")
 // 字体颜色
-const numberClass = [
-  "#FFFFFF",
-  "#4876FF",
-  "#458B00",
-  "#CD6600",
-  "#27408B",
-  "#B22222",
-  "#48D1CC",
-  "#CD00CD",
-  "#EEC900",
-  "#000000"
-]
 
 class PopupNumbers {
   constructor($panel) {
@@ -53,37 +41,23 @@ class PopupNumbers {
           .removeClass("mark1")
           .removeClass("mark2")
           .addClass("empty")
-          .css({
-            color: numberClass[0]
-          })
       } else {
         // 填入数字
         // 移除empty类 并添加上面板上点击的数字
         $cell
           .removeClass("empty")
           .text($span.text())
-          .css({
-            color: numberClass[$span.text()]
-          })
+          .addClass(`color-${$span.text()}`)
       }
       // 点击完之后需要关闭面板
-      this._$panel.hide()
+      this._$panel.slideUp(500);
     })
   }
 
+  // 将弹出面板固定位置
   popup($cell) {
-    this._$targetCell = $cell
-    const {
-      left,
-      top
-    } = $cell.position()
-
-    this._$panel
-      .css({
-        left: `${left}px`,
-        top: `${top}px`
-      })
-      .show()
+    this._$targetCell = $cell;
+    this._$panel.slideDown(500);
   }
 }
 

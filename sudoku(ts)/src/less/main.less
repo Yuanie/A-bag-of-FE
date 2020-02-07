@@ -1,4 +1,5 @@
 // Variables Definition
+// rem 代表着“以根元素为参照物的 em 单位”
 @rootFontSize: 14px;
 @rootFontFamily: "Consolas", "微软雅黑", "Heiti";
 @shadow: 0.2rem 0.3rem 0.4rem rgba(48, 48, 48, 192);
@@ -6,6 +7,7 @@
 @shadowTop: 0 -0.1rem 0.2rem rgba(48, 48, 48, 192);
 @borderColor: #888888;
 @popupBlockSize: 48px;
+
 // Style rules
 html {
     font-size: @rootFontSize;
@@ -20,6 +22,7 @@ body {
     user-select: none;
     // 兼容非移动平台的 web
     max-width: 450px;
+
     >* {
         max-width: 450px;
     }
@@ -64,49 +67,62 @@ h1 {
         border-top-width: 1px;
         border-left-width: 1px;
         background-color: white;
+
         &.fixed {
             color: #999999;
         }
+
         &.empty {
             color: transparent;
         }
+
         &.mark1 {
             background: lightblue;
         }
+
         &.mark2 {
             background: lightgreen;
         }
+
         &.error {
             background: lightpink;
         }
+
         &.col_g_left {
             border-left-width: 1px;
         }
+
         &.col_g_right {
             border-right-width: 1px;
         }
+
         &:first-child {
             border-left-width: 2px;
         }
+
         &:last-child {
             border-right-width: 2px;
         }
     }
+
     &.row_g_top {
         >span {
             border-top-width: 1px;
         }
     }
+
     &.row_g_bottom {
         >span {
             border-bottom-width: 1px;
         }
     }
+
     &:first-child {
         >span {
             border-top-width: 2px;
         }
     }
+
     &:last-child {
         >span {
             border-bottom-width: 2px;
@@ -124,11 +140,13 @@ h1 {
     box-sizing: border-box;
     box-shadow: @shadowTop;
     height: 3rem;
+
     .buttons {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
+
         button {
             font-family: @rootFontFamily;
             float: left;
@@ -139,6 +157,7 @@ h1 {
             background: transparent;
             border: 1px solid #cccccc;
             border-right-width: 0;
+
             &:last-child {
                 border-right-width: 1px;
             }
@@ -154,6 +173,7 @@ h1 {
     box-shadow: @shadow;
     border: 1px solid white;
     color: white;
+
     div {
         >span {
             background: steelblue;
@@ -162,6 +182,7 @@ h1 {
             line-height: @popupBlockSize;
             font-size: 24px;
             border-color: white;
+
             &.mark {
                 color: transparent;
             }

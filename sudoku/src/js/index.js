@@ -9,7 +9,8 @@ const grid = new Grid($("#container"));
 grid.build();
 grid.layout();
 
-const popupNumbers = new PopupNumbers($("#popupNumbers"));
+const $popupDom = $("#popup");
+const popupNumbers = new PopupNumbers($popupDom);
 grid.bindPopup(popupNumbers);
 
 // 检查面板的事件

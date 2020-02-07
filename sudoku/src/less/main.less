@@ -1,5 +1,8 @@
 @shadowBottom: 0 0.2rem 0.3rem rgba(48, 48, 48, 192);
 @shadowTop: 0 -0.1rem 0.2rem rgba(48, 48, 48, 192);
+@popupBlockSize: 36.5px;
+@popupContainer: 110px;
+@shadow: 0.2rem 0.3rem 0.4rem rgba(48, 48, 48, 192);
 
 html {
   font-size: 14px;
@@ -11,11 +14,11 @@ body {
   background: #eeeeee;
   font-family: "Consolas", "微软雅黑";
   user-select: none;
-  max-width: 450px;
+  max-width: 400px;
 
   // 选择所有直接子级
-  >* {
-    max-width: 450px;
+  > * {
+    max-width: 400px;
   }
 }
 
@@ -37,110 +40,154 @@ body {
   display: none;
 }
 
-@popupCellSize: 40px;
+// 字体颜色
+.color-1 {
+  color: #4876ff;
+}
 
-.popup-num {
-  // 继承container样式
-  .container();
-  position: absolute;
-  padding-left: 0;
+.color-2 {
+  color: #458b00;
+}
 
-  .row {
-    >span {
-      width: @popupCellSize;
-      height: @popupCellSize;
-      line-height: @popupCellSize;
-    }
-  }
+.color-3 {
+  color: #cd6600;
+}
+
+.color-4 {
+  color: #27408b;
+}
+
+.color-5 {
+  color: #b22222;
+}
+
+.color-6 {
+  color: #48d1cc;
+}
+.color-7 {
+  color: #cd00cd;
+}
+
+.color-8 {
+  color: #eec900;
+}
+
+.color-9 {
+  color: #000000;
 }
 
 .container {
   padding-left: 5%;
+}
 
-  .row {
-    >span {
-      display: inline-block;
-      cursor: pointer;
-      text-align: center;
-      font-size: 25px;
-      width: 10%;
-      height: 20px;
-      line-height: 24px;
-      border: 1px solid #076760;
-      border-right-width: 0;
-      border-bottom-width: 0;
-      background: white;
+.row {
+  > span:active {
+    background-color: burlywood;
+    &.empty {
+      color: burlywood;
+    }
+  }
 
-      &.col_g_right {
-        border-right-width: 1px;
-      }
+  > span {
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    font-size: 25px;
+    width: 10%;
+    height: 20px;
+    line-height: 24px;
+    border: 1px solid #076760;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    background: white;
 
-      &:first-child {
-        border-left-width: 2px;
-      }
-
-      &:last-child {
-        border-right-width: 2px;
-      }
-
-      &.fixed {
-        background-color: #eeeeee;
-      }
-
-      &.mark1 {
-        background-color: lightblue;
-      }
-
-      &.mark2 {
-        background-color: lightgreen;
-      }
-
-      &.error {
-        background-color: lightpink;
-      }
-
-      // 一个元素同时应用多个class，后定义的优先(即近者优先)，加上!important者最优先!
-      // empty 在 mark1、mark2的后面意味着
-      // 添加了 empty 的元素不能再添加上面的样式了
-      &.empty {
-        color: white;
-
-        // 这里需要改
-        &.mark1 {
-          color: lightblue !important;
-        }
-
-        &.mark2 {
-          color: lightgreen !important;
-        }
-
-      }
-
-      &.error {
-        background-color: lightpink;
-
-        &.empty {
-          color: lightpink;
-        }
-      }
-
+    &.fixed {
+      background-color: #eeeeee;
     }
 
-    &.row_g_bottom {
-      >span {
-        border-bottom-width: 1px;
+    &.empty {
+      color: white;
+      &.mark1 {
+        color: lightblue;
       }
+      &.mark2 {
+        color: lightgreen;
+      }
+      &.error {
+        color: lightpink;
+      }
+    }
+
+    &.mark1 {
+      background-color: lightblue;
+    }
+
+    &.mark2 {
+      background-color: #90ee90;
+    }
+
+    &.error {
+      background-color: lightpink;
+    }
+
+    &.col_g_left {
+      border-left-width: 1px;
+    }
+
+    &.col_g_right {
+      border-right-width: 1px;
     }
 
     &:first-child {
-      >span {
-        border-top-width: 2px;
-      }
+      border-left-width: 2px;
     }
 
     &:last-child {
-      >span {
-        border-bottom-width: 2px;
+      border-right-width: 2px;
+    }
+
+    // 一个元素同时应用多个class，后定义的优先(即近者优先)，加上!important者最优先!
+    // empty 在 mark1、mark2的后面意味着
+    // 添加了 empty 的元素不能再添加上面的样式了
+  }
+
+  &.row_g_top {
+    > span {
+      border-top-width: 1px;
+    }
+  }
+  &.row_g_bottom {
+    > span {
+      border-bottom-width: 1px;
+    }
+  }
+
+  &:first-child {
+    > span {
+      border-top-width: 2px;
+    }
+  }
+
+  &:last-child {
+    > span {
+      border-bottom-width: 2px;
+    }
+  }
+}
+
+#popupNumbers {
+  display: inline-block;
+  padding: 0;
+  width: 100%;
+  .popup-num {
+    position: inline-block;
+    width: 120px;
+    margin: 0 auto;
+    .row {
+      > span {
+        width: @popupBlockSize;
+        height: @popupBlockSize;
+        line-height: @popupBlockSize;
       }
     }
   }

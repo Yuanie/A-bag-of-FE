@@ -35,16 +35,23 @@ class Grid {
 
     const $cells = matrix.map(rowArray => rowArray
       .map((cellValue, colIndex) => {
-        return $("<span>")
+        let $span = $("<span>")
           // 为class=col_g_right 的方块加样式 
           .addClass(colGroupClasses[colIndex % 3])
           .text(cellValue)
-          .addClass(cellValue ? 'fixed' : 'empty')
-          // 为不同的数字设置不同颜色
-          // 0则赋予白色 留给用户填写
-          .css({
+          .addClass(cellValue ? 'fixed' : 'empty');
+        // 为不同的数字设置不同颜色
+        // 0则赋予白色 留给用户填写
+        // 项目中一直有问题就是赋予背景色之后白色的0显现出来
+        // 因为此处对0赋予了 style内联式的样式 其级别大于其他选择器样式
+        // 因此在less表中修改无用
+        // 这里根据是否为0进行判断
+        if (cellValue > 0) {
+          $span.css({
             "color": numberClass[cellValue]
           })
+        }
+        return $span;
       }));
 
     const $divArray = $cells
@@ -123,6 +130,7 @@ class Grid {
   reset() {
     this._$container.find("span:not(.fixed)")
       .removeClass("error mark1 mark2")
+      .addClass("empty")
       .text(0);
   }
 
@@ -151,6 +159,7 @@ class Grid {
         // 点击固定的数字不会弹出面板
         return;
       }
+
       popupNumbers.popup($cell);
     })
   }
